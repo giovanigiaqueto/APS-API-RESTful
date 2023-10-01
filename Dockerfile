@@ -8,19 +8,17 @@ RUN apt-get update -qq &&\
 # instalação das gems necessárias
 WORKDIR /app
 ADD Gemfile ./
-RUN bundle install --prefer-local
+RUN bundle install
 
 # ambiente de desenvolvimento
 FROM base AS develop
 WORKDIR /app/api-rails
 
 # instalação das dependências do Rails
-RUN --mount=type=bind,source=src/,target=/app/api-rails/,rw\
-  bundle config\
-	set --local --with development &&\
-  bundle install\
-	--prefer-local\
-	--gemfile /app/api-rails/Gemfile
+ADD src/Gemfile src/Gemfile.lock ./
+RUN\
+  bundle config set --local --with development &&\
+  bundle install
 
 # copia do código fonte
 COPY src/ ./
