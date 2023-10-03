@@ -1,8 +1,13 @@
 #!/usr/bin/ruby
 
+# script para carregamento do dataset do arquivo 'dataset/corruption.csv'
+# no banco SQLite3 'src/db/development.sqlite3'
+
+# dependências
 require 'sqlite3'
 require 'csv'
 
+# carregamento do módulo 'pathname' somente quando Pathname é referenciado
 autoload :Pathname, 'pathname'
 
 # garante que o script seja executado relativo à pasta do projeto
