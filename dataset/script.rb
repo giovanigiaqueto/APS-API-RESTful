@@ -136,8 +136,8 @@ end
 # detecta se o banco de dados ainda não foi criado
 unless File.exist?('src/db/development.sqlite3')
   norm_path = ->(path) { Pathname.new(path).to_s } 
-  STDERR.puts(
-    "arquivo não encontrado: #{norm_path('src/db/development.sqlite3')}"),
+  STDERR.puts([
+    "arquivo não encontrado: #{norm_path('src/db/development.sqlite3')}",
     "",
     "execute 'ruby #{norm_path('bin/bundle')} exec #{norm_path('bin/rails')} db:schema:load'",
     "dentro da pasta 'src' para gerar o banco de dados através do rails",
