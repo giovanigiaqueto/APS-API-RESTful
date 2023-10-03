@@ -24,6 +24,65 @@ class DecimalLengthExceededError < Exception
   # a quantidade de casas decimais permitidas
 end
 
+OPCOES_VALIDAS = [
+  [:h,  :help],
+  [:D,  :dry],
+].freeze
+
+# aliases
+OPCOES_EQUIVALENTES = {
+  :ajuda => :help
+}
+
+opcoes = {}
+opcoes_invalidas = []
+
+ignorar_opcoes = false
+ARGV.filter do |arg|
+  if ignorar_opcoes or arg.strip == '--'
+    ignorar_opcoes = true
+    true
+  elsif opcao = arg.strip.match(/^-([a-zA-Z])|--([a-z]+)$/)
+    usado = false
+    if opcao_curta = opcao[1]
+      sym = opcao_curta.to_sym
+      if par = OPCOES_VALIDAS.assoc(sym)
+        _, opcao_longa = par
+        if opcao_longa.is_a?(Symbol)
+          opcoes[opcao_longa] = true
+          usado = true
+        end
+      else
+        opcoes_invalidas <<= arg
+        usado = true
+      end
+    elsif opcao_longa = opcao[2]
+      sym = opcao_longa.to_sym
+      if !OPCOES_VALIDAS.rassoc(sym).nil?
+        opcoes[sym] = true
+      else
+        opcoes_invalidas <<= arg
+      end
+      usado = true
+    end
+
+    not usado
+  else
+    true
+  end
+end
+
+if opcao_invalida = opcoes_invalidas.shift
+  STDERR.puts("opção invalida: #{opcao_invalida}")
+  exit 1
+end
+
+def opcao?(flag)
+  flag = flag.to_sym if flag.is_a?(String)
+  flag = OPCOES_EQUIVALENTES.fetch(flag, flag)
+  opcoes.include?(flag)
+end
+
 def converter_dolar_hash?(valor)
   # faz a conversão de dólares separados por virgulas e pontos
   # (e.g. 12,345,678.90) para um hash '{int: 123, frac: 456, digitos: 3}'
@@ -161,8 +220,12 @@ begin
   db.transaction {|db|
     db.prepare('DELETE FROM countries WHERE name == ?') {|stmt|
       dados_csv.each{|linha|
-        stmt.execute(linha[0])
-        puts "country '#{linha[0]}' removed"
+        if not opcao?(:dry)
+          stmt.execute(linha[0])
+          puts "country '#{linha[0]}' removed"
+        else
+          puts "(dry run) country '#{linha[0]}' removed"
+        end
       }
     }
     db.prepare(%Q(
@@ -172,8 +235,12 @@ VALUES
   (?, ?, ?, date('now'), date('now'))
 )) {|stmt|
       dados_csv.each{|linha|
-        stmt.execute(*linha)
-        puts "country '#{linha}' inserted"
+        if not opcao?(:dry)
+          stmt.execute(*linha)
+          puts "country '#{linha}' inserted"
+        else
+          puts "(dry run) country '#{linha}' inserted"
+        end
       }
     }
   }
