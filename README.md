@@ -1,12 +1,12 @@
 # APS de API RESTful com Rails
 
 Projeto de API RESTful com JWT (Json Web Token) usando o framework Rails e containers Docker,
-para carregamento usando docker compose, provendo acesso a dados de um dataset baixado do [Kaggle](https://www.kaggle.com/)
+para carregamento usando docker compose, provendo acesso a dados de um dataset baixado do [Kaggle](https://www.kaggle.com/).
 
 ## Estrutura
 
 A API foi desenvolvida com auxílio do framework Rails em Ruby 3.5,
-e colocada em uma imagem docker para deployment usando `docker compose`
+e colocada em uma imagem docker para deployment usando `docker compose`.
 
 ## Pré-requisitos
 
