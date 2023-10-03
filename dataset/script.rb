@@ -83,6 +83,36 @@ def opcao?(flag)
   opcoes.include?(flag)
 end
 
+def mensagem_ajuda
+  STDERR.puts(
+<<~EOF
+uso: ruby [-D|--dry] #{Pathname.new('dataset/script.rb').to_s}
+
+Lê o dataset do arquivo CSV '#{Pathname.new('dataset/corruption.csv')}',
+faz as conversões adequadas, e carrega os dados no baco SQLite3 do arquivo
+'#{Pathname.new('src/db/development.sqlite3').to_s}'.
+
+Esse script não cria o banco de dados, isso deve ser feito através do rails com
+o subcomando db:migration:load, que deve ser executado com 'bin/bundle exec bin/rails'
+dentro da pasta 'src'.
+
+Opções:
+    -D, --dry  executa o script sem tocar no banco de dados, o que pode ser usado
+               para testar se os arquivos do dataset e o banco de dados existem,
+               e os dados do dataset podem ser interpretados corretamente
+EOF
+  )
+end
+
+def ajuda(cod_saida = 1)
+  mensagem_ajuda
+  exit cod_saida.to_int
+end
+
+if opcao?(:ajuda)
+  ajuda
+end
+
 def converter_dolar_hash?(valor)
   # faz a conversão de dólares separados por virgulas e pontos
   # (e.g. 12,345,678.90) para um hash '{int: 123, frac: 456, digitos: 3}'
