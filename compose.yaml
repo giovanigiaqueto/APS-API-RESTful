@@ -1,0 +1,6 @@
+services:
+  api-rails:
+    image: "api-rails:${TAG}"
+    build: .
+    network_mode: host
+
