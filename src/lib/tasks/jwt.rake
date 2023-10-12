@@ -143,14 +143,16 @@ namespace :jwt do
 
     abort "usuário não encontrado" if user.nil?
 
+    arquivo = "../jwt/#{user.name}.jwt.txt"
+    abort "nome de token já em uso" if File.exist?(arquivo)
+
     # ID + data e horário de última alteração (UTC)
     json = {
       user_id:   user.id,
       timestamp: user.updated_at.to_formatted_s
     }
 
-    payload = JSON.load(json)
-    token   = codificar_jwt(payload)
+    token = codificar_jwt(json)
     File.write(arquivo, token)
     puts("token '#{token}' salvo no arquivo #{File.expand_path(arquivo)}")
   end
