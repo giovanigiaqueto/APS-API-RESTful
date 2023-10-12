@@ -1,0 +1,5 @@
+# ignore tokens gerados (a validade deles depende da data da última alteração
+# do registro de cada usuário, e podem se tornar inválidos caso qualquer campo
+# do registro seja alterado, mesmo os que não afetam o funcionamento do token)
+/*.jwt.txt
+

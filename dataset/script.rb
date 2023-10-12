@@ -1,8 +1,13 @@
 #!/usr/bin/ruby
 
+# script para carregamento do dataset do arquivo 'dataset/corruption.csv'
+# no banco SQLite3 'src/db/development.sqlite3'
+
+# dependências
 require 'sqlite3'
 require 'csv'
 
+# carregamento do módulo 'pathname' somente quando Pathname é referenciado
 autoload :Pathname, 'pathname'
 
 # garante que o script seja executado relativo à pasta do projeto
@@ -17,6 +22,95 @@ DOLAR_REGEXPR = /^([1-9][0-9]{0,2}(?:,[0-9]{3})*)(?:\.([0-9]+))?\s*\$$/
 class DecimalLengthExceededError < Exception
   # causada quando um valor decimal excede
   # a quantidade de casas decimais permitidas
+end
+
+OPCOES_VALIDAS = [
+  [:h,  :help],
+  [:D,  :dry],
+].freeze
+
+# aliases
+OPCOES_EQUIVALENTES = {
+  :ajuda => :help
+}
+
+opcoes = {}
+opcoes_invalidas = []
+
+ignorar_opcoes = false
+ARGV.filter do |arg|
+  if ignorar_opcoes or arg.strip == '--'
+    ignorar_opcoes = true
+    true
+  elsif opcao = arg.strip.match(/^-([a-zA-Z])|--([a-z]+)$/)
+    usado = false
+    if opcao_curta = opcao[1]
+      sym = opcao_curta.to_sym
+      if par = OPCOES_VALIDAS.assoc(sym)
+        _, opcao_longa = par
+        if opcao_longa.is_a?(Symbol)
+          opcoes[opcao_longa] = true
+          usado = true
+        end
+      else
+        opcoes_invalidas <<= arg
+        usado = true
+      end
+    elsif opcao_longa = opcao[2]
+      sym = opcao_longa.to_sym
+      if !OPCOES_VALIDAS.rassoc(sym).nil?
+        opcoes[sym] = true
+      else
+        opcoes_invalidas <<= arg
+      end
+      usado = true
+    end
+
+    not usado
+  else
+    true
+  end
+end
+
+if opcao_invalida = opcoes_invalidas.shift
+  STDERR.puts("opção invalida: #{opcao_invalida}")
+  exit 1
+end
+
+def opcao?(flag)
+  flag = flag.to_sym if flag.is_a?(String)
+  flag = OPCOES_EQUIVALENTES.fetch(flag, flag)
+  opcoes.include?(flag)
+end
+
+def mensagem_ajuda
+  STDERR.puts(
+<<~EOF
+uso: ruby [-D|--dry] #{Pathname.new('dataset/script.rb').to_s}
+
+Lê o dataset do arquivo CSV '#{Pathname.new('dataset/corruption.csv')}',
+faz as conversões adequadas, e carrega os dados no baco SQLite3 do arquivo
+'#{Pathname.new('src/db/development.sqlite3').to_s}'.
+
+Esse script não cria o banco de dados, isso deve ser feito através do rails com
+o subcomando db:migration:load, que deve ser executado com 'bin/bundle exec bin/rails'
+dentro da pasta 'src'.
+
+Opções:
+    -D, --dry  executa o script sem tocar no banco de dados, o que pode ser usado
+               para testar se os arquivos do dataset e o banco de dados existem,
+               e os dados do dataset podem ser interpretados corretamente
+EOF
+  )
+end
+
+def ajuda(cod_saida = 1)
+  mensagem_ajuda
+  exit cod_saida.to_int
+end
+
+if opcao?(:ajuda)
+  ajuda
 end
 
 def converter_dolar_hash?(valor)
@@ -156,8 +250,12 @@ begin
   db.transaction {|db|
     db.prepare('DELETE FROM countries WHERE name == ?') {|stmt|
       dados_csv.each{|linha|
-        stmt.execute(linha[0])
-        puts "country '#{linha[0]}' removed"
+        if not opcao?(:dry)
+          stmt.execute(linha[0])
+          puts "country '#{linha[0]}' removed"
+        else
+          puts "(dry run) country '#{linha[0]}' removed"
+        end
       }
     }
     db.prepare(%Q(
@@ -167,8 +265,12 @@ VALUES
   (?, ?, ?, date('now'), date('now'))
 )) {|stmt|
       dados_csv.each{|linha|
-        stmt.execute(*linha)
-        puts "country '#{linha}' inserted"
+        if not opcao?(:dry)
+          stmt.execute(*linha)
+          puts "country '#{linha}' inserted"
+        else
+          puts "(dry run) country '#{linha}' inserted"
+        end
       }
     }
   }

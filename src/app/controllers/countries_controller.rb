@@ -4,6 +4,7 @@ class CountriesController < ApplicationController
   # include ActionController::Rendering
 
   def index
+    return if not autorizar_request!
     @countries = Country
       .select(:name, :corruption_index, :annual_income)
       .all
@@ -11,6 +12,7 @@ class CountriesController < ApplicationController
   end
 
   def show
+    return if not autorizar_request!
     @country = Country
       .select(:name, :corruption_index, :annual_income)
       .where(name: params[:name])
