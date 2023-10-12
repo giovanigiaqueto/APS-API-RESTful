@@ -90,10 +90,10 @@ class ApplicationController < ActionController::API
       # descarta o token em caso de campos faltantes
       if id.nil?
         logger.debug "Ignored JWT without 'user_id' field: #{token}"
-        return nil
+        return (@token = nil)
       elsif timestamp.nil?
         logger.debug "Ignored JWT without 'timestamp' field: #{token}"
-        return nil
+        return (@token = nil)
       end
 
       @user = User.find_by(id: id)
@@ -111,9 +111,15 @@ class ApplicationController < ActionController::API
     usuario = usuario_request
     token   = token_jwt
     return if usuario.nil? or token.nil?
-    t0 = Time.parse(token['timestamp'])
-    t1 = usuario.updated_at.to_datetime
-    (t1 - t0) <= 1
+    if timestamp = token[:payload]["timestamp"]
+      t0 = Time.parse(timestamp)
+      t1 = usuario.updated_at
+      (t1 - t0) > 1.0
+    else
+      logger.warn "Ignoring JWT without 'timestamp' field in #{self.class}::jwt_antigo?: #{token}"
+      # NOTE: por segurança, é melhor considerar que o token está invalido
+      true
+    end
   end
 
   def request_autorizada?
