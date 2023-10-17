@@ -1,7 +1,7 @@
 
 # Changelog
 
-## [Hotfix v0.2.1](https://github.com/giovanigiaqueto/APS-API-RESTful/tag/v0.2.1)
+## [Hotfix v0.2.1](https://github.com/giovanigiaqueto/APS-API-RESTful/releases/tag/v0.2.1)
 
 [Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.2.0...v0.2.1)
 
@@ -17,7 +17,7 @@ o ID do registro no banco de dados.
 * hotfix: correção na validação de usuários [099edcb](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/099edcb)
 * bugfix: correção na tarefa de criação de tokens JWT [a15d361](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/a15d361)
 
-## [Release v0.2.0](https://github.com/giovanigiaqueto/APS-API-RESTful/tag/v0.2.0)
+## [Release v0.2.0](https://github.com/giovanigiaqueto/APS-API-RESTful/releases/tag/v0.2.0)
 
 [Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.1.1...v0.2.0)
 
@@ -51,7 +51,7 @@ o ID do registro no banco de dados.
 * dataset/script: adição de opções ao script 'dataset/script.rb' [4c73fa5](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/4c73fa5)
 * dataset/script: adição de comentários no script 'dataset/script.rb' [1be1b54](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/1be1b54)
 
-## [Hotfix v0.1.1](https://github.com/giovanigiaqueto/APS-API-RESTful/tag/v0.1.1)
+## [Hotfix v0.1.1](https://github.com/giovanigiaqueto/APS-API-RESTful/releases/tag/v0.1.1)
 
 [Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.1.0...v0.1.1)
 
@@ -62,7 +62,7 @@ que impedia sua utilização para carregamento do dataset no banco de dados.
 
 * hotfix: correção do script de carregamento do dataset [2f8f620](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/2f8f620)
 
-## [Release v0.1.0](https://github.com/giovanigiaqueto/APS-API-RESTful/tag/v0.1.0)
+## [Release v0.1.0](https://github.com/giovanigiaqueto/APS-API-RESTful/releases/tag/v0.1.0)
 
 **Adições Principais:**
 
