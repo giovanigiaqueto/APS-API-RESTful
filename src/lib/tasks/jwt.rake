@@ -132,7 +132,8 @@ namespace :jwt do
   task :novo, [:id, :nome] => :environment do |t, args|
     sem_docker!
 
-    if id = args.id.to_i
+    if id = args.id
+      id = id.to_i
       abort "id inválido" if id.nil?
       user = User.find_by(id: id.to_i)
     elsif nome = args.nome
