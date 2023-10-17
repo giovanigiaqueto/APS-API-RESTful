@@ -1,6 +1,22 @@
 
 # Changelog
 
+## [Hotfix v0.2.1](https://github.com/giovanigiaqueto/APS-API-RESTful/tag/v0.2.1)
+
+[Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.2.0...v0.2.1)
+
+Correção de erro grave na validação de usuários que impedia a existência de usuários sem permissão
+de escrita (alteração, criação e remoção de dados) ou administração (usuário admin).
+
+Também foi corrigido um erro na tarefa 'jwt:novo' para criação de tokens JWT, que considerava um ID vazio como inválido
+ao invés de não fornecido. Isso impedia que um token fosse criado somente com o nome do usuário, sem fornecer
+o ID do registro no banco de dados.
+
+**Correções:**
+
+* hotfix: correção na validação de usuários [099edcb](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/099edcb)
+* bugfix: correção na tarefa de criação de tokens JWT [a15d361](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/a15d361)
+
 ## [Release v0.2.0](https://github.com/giovanigiaqueto/APS-API-RESTful/tag/v0.2.0)
 
 [Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.1.1...v0.2.0)
