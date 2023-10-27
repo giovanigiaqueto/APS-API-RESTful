@@ -12,7 +12,7 @@ module Dataset
     # gera TypeError caso a entrada não possa ser convertida
     # implicitamente para String
 
-    texto = texto.to_str.strip
+    texto = String.new(texto).strip
 
     sep_milhar = sep_milhar.to_str unless sep_milhar.nil?
     if sep_decimal.nil?
@@ -197,6 +197,10 @@ module Dataset
     def size
       # quantidade de linhas no dataset
       @tabela.size
+    end
+
+    def each(&block)
+      @tabela.each(&block)
     end
 
     alias :push :<<
