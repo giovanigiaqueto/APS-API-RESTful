@@ -177,6 +177,10 @@ def csv?(path, digitos: 2, round: false)
       :integer,
       ->(valor) {
         converter_dolar(valor, digitos = digitos, round: round, fallback: valor)
+      },
+      ->(valor) {
+        valor = nil if valor.is_a?(String) and valor == "n/a"
+        valor
       }
     ],
   )
@@ -190,7 +194,7 @@ def array_csv?(path, **opt)
     pais  = linha['Country']
     rank  = linha['Corruption index']
     renda = linha['Annual income']
-    if pais.nil? or rank.nil? or renda.nil?
+    if pais.nil? or rank.nil? or not [NilClass, Float, Integer].include?(renda.class)
       raise RuntimeError, "dados invalidos na entrada #{idx}"
     end
     linhas.push([pais, rank, renda])
