@@ -34,12 +34,12 @@ OPCOES_EQUIVALENTES = {
   :ajuda => :help
 }
 
-opcoes = {}
+$opcoes = {}
 opcoes_invalidas = []
 
 ignorar_opcoes = false
 ARGV.filter do |arg|
-  if ignorar_opcoes or arg.strip == '--'
+  if $gnorar_opcoes or arg.strip == '--'
     ignorar_opcoes = true
     true
   elsif opcao = arg.strip.match(/^-([a-zA-Z])|--([a-z]+)$/)
@@ -49,17 +49,17 @@ ARGV.filter do |arg|
       if par = OPCOES_VALIDAS.assoc(sym)
         _, opcao_longa = par
         if opcao_longa.is_a?(Symbol)
-          opcoes[opcao_longa] = true
+          $opcoes[opcao_longa] = true
           usado = true
         end
       else
         opcoes_invalidas <<= arg
         usado = true
       end
-    elsif opcao_longa = opcao[2]
+    elsif opcao_longa = $opcao[2]
       sym = opcao_longa.to_sym
       if !OPCOES_VALIDAS.rassoc(sym).nil?
-        opcoes[sym] = true
+        $opcoes[sym] = true
       else
         opcoes_invalidas <<= arg
       end
@@ -80,7 +80,7 @@ end
 def opcao?(flag)
   flag = flag.to_sym if flag.is_a?(String)
   flag = OPCOES_EQUIVALENTES.fetch(flag, flag)
-  opcoes.include?(flag)
+  $opcoes.include?(flag)
 end
 
 def mensagem_ajuda
