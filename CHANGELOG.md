@@ -1,6 +1,31 @@
 
 # Changelog
 
+## [Hotfix v0.2.2](https://github.com/giovanigiaqueto/APS-API-RESTful/releases/tag/v0.2.2)
+
+[Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.2.1...v0.2.2)
+
+Correção de erro no script de carregamento do dataset que impedia o seu uso,
+alteração do schema de banco de dados, script de carregamento do dataset
+e validação do modelo que representa os dados dos países (classe Country)
+para suportarem países com renda anual média desconhecida ("n/a" na coluna "Ø Annual Income").
+
+Anteriormente, a renda anual média de países com renda anual média desconhecida
+era convertida para "0.0" pelo script de carregamento do dataset. Isso foi corrigido,
+e um arquivo de migração do banco de dados foi gerado para permitir o carregamento
+desses países no banco, que pode ser usada para migrar o banco de dados com o comando
+`bin/rails db:migrate`.
+
+A migração do banco não irá alterar cadastros antigos, em instalações antigas
+os países com renda anual média desconhecida devem ser alterados manualmente
+pelos comandos `bin/rails console` ou `bin/rails dbconsole`.
+
+**Correções:**
+
+* dataset/script: alteração do script de carregamento do dataset para aceitar rendas nulas [c3ffadb](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/c3ffadb)
+* migração: migração do banco de dados para permitir renda anual nula [fc5317b](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/fc5317b)
+* hotfix: correção das opções do script de carregamento do dataset [7ca4921](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/7ca4921)
+
 ## [Hotfix v0.2.1](https://github.com/giovanigiaqueto/APS-API-RESTful/releases/tag/v0.2.1)
 
 [Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.2.0...v0.2.1)
@@ -85,4 +110,3 @@ que impedia sua utilização para carregamento do dataset no banco de dados.
 * dataset/script: script de carregamento do dataset no banco de dados [c8fadc1](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/c8fadc1)
 * rails/api: métodos de leitura e listagem de países na API [4ffdb55](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/4ffdb55)
 * rails, dockerfile: código da API em Rails e Dockerfile da imagem [a84acd4](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/a84acd4)
-

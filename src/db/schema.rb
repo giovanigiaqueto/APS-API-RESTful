@@ -10,10 +10,10 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_11_232406) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_27_195103) do
   create_table "countries", primary_key: "name", id: :string, force: :cascade do |t|
     t.integer "corruption_index", null: false
-    t.decimal "annual_income", precision: 10, scale: 2, null: false
+    t.decimal "annual_income", precision: 10, scale: 2
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
