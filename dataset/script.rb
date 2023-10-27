@@ -34,12 +34,12 @@ OPCOES_EQUIVALENTES = {
   :ajuda => :help
 }
 
-opcoes = {}
+$opcoes = {}
 opcoes_invalidas = []
 
 ignorar_opcoes = false
 ARGV.filter do |arg|
-  if ignorar_opcoes or arg.strip == '--'
+  if $gnorar_opcoes or arg.strip == '--'
     ignorar_opcoes = true
     true
   elsif opcao = arg.strip.match(/^-([a-zA-Z])|--([a-z]+)$/)
@@ -49,17 +49,17 @@ ARGV.filter do |arg|
       if par = OPCOES_VALIDAS.assoc(sym)
         _, opcao_longa = par
         if opcao_longa.is_a?(Symbol)
-          opcoes[opcao_longa] = true
+          $opcoes[opcao_longa] = true
           usado = true
         end
       else
         opcoes_invalidas <<= arg
         usado = true
       end
-    elsif opcao_longa = opcao[2]
+    elsif opcao_longa = $opcao[2]
       sym = opcao_longa.to_sym
       if !OPCOES_VALIDAS.rassoc(sym).nil?
-        opcoes[sym] = true
+        $opcoes[sym] = true
       else
         opcoes_invalidas <<= arg
       end
@@ -80,7 +80,7 @@ end
 def opcao?(flag)
   flag = flag.to_sym if flag.is_a?(String)
   flag = OPCOES_EQUIVALENTES.fetch(flag, flag)
-  opcoes.include?(flag)
+  $opcoes.include?(flag)
 end
 
 def mensagem_ajuda
@@ -177,6 +177,10 @@ def csv?(path, digitos: 2, round: false)
       :integer,
       ->(valor) {
         converter_dolar(valor, digitos = digitos, round: round, fallback: valor)
+      },
+      ->(valor) {
+        valor = nil if valor.is_a?(String) and valor == "n/a"
+        valor
       }
     ],
   )
@@ -190,7 +194,7 @@ def array_csv?(path, **opt)
     pais  = linha['Country']
     rank  = linha['Corruption index']
     renda = linha['Annual income']
-    if pais.nil? or rank.nil? or renda.nil?
+    if pais.nil? or rank.nil? or not [NilClass, Float, Integer].include?(renda.class)
       raise RuntimeError, "dados invalidos na entrada #{idx}"
     end
     linhas.push([pais, rank, renda])
