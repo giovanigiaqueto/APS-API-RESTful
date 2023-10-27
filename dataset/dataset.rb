@@ -9,7 +9,7 @@ module Dataset
     # '123456.789', '123.467,789' ou '123456,789') para Float se possível,
     # retornando 'nil' caso a conversão falhe
     #
-    # gera ArgumentError caso a entrada não possa ser convertida
+    # gera TypeError caso a entrada não possa ser convertida
     # implicitamente para String
 
     texto = texto.to_str.strip
@@ -73,12 +73,18 @@ module Dataset
       converters: [
         :integer,
         ->(valor) {
-          self.decimal(
-            valor.delete_suffix('$').rstrip,
-            sep_milhar: ',',
-            sep_decimal: '.'
-          ) or valor
-        }
+          if not valor.is_a?(String)
+            valor
+          elsif valor.downcase == "n/a"
+            nil
+          else
+            self.decimal(
+              valor.delete_suffix('$').rstrip,
+              sep_milhar: ',',
+              sep_decimal: '.'
+            ) or valor
+          end
+        },
       ]
     )
 
@@ -130,12 +136,16 @@ module Dataset
     end
 
     def salario=(valor)
+      if valor.nil?
+        return @salario = nil
+      end
+
       if valor.is_a?(Float)
         salario = valor.dup
       elsif valor.is_a?(Integer)
         salario = valor.to_f
       else
-        raise TypeError, "invalid value for 'salario=' (not a Integer or Float)"
+        raise TypeError, "invalid value for 'salario=' (not a Integer, Float or NilClass)"
       end
 
       raise RuntimeError, "attribute can't be set to negative value" if salario < 0
