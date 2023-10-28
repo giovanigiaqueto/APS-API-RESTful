@@ -19,6 +19,6 @@ class CountriesController < ApplicationController
       .take
     render json: {"country": @country}
   rescue ActiveRecord::RecordNotFound
-    render json: {"error": 404, "text": "Not Found"}
+    erro_request("Not Found", "resource not found", :not_found)
   end
 end
