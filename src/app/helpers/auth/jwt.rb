@@ -134,21 +134,37 @@ module Auth::Jwt
     end
   end
 
-  def autorizar_request!(escrita: false, admin: false)
+  def autorizar_request(escrita: false, admin: false)
     # verifica se a request for autorizada através de um token JWT válido,
     # respondendo com "401: Unauthorized" caso a request não tenha um JWT
     # ou o token seja mais antigo que o marca de tempo da ultima alteração
     # do cadastro de usuário que fez a request
-    if usuario_request.nil?
-      motivo = "missing or invalid JWT token"
-    elsif jwt_antigo?
-      motivo = "expired timestamp"
-    else
-      return true
-    end
+    autorizar_request!(escrita: escrita, admin: admin)
+    return true
+  rescue Auth::Unauthorized => e
+    request_nao_autorizada(e.message)
+    return false
+  end
 
-    request_nao_autorizada(motivo)
-    false
+  def autorizar_request!(escrita: false, admin: false)
+    # verifica se a request for autorizada através de um token JWT válido
+    # assim como o método "autorizar_request" faz, porém gera exceções
+    # da classe Auth::Unauthorized caso a request não seja autorizada
+    #
+    # exceções:
+    #   Auth::
+    #
+    if token_jwt.nil?
+      raise Auth::MissingJwt, "missing JWT token"
+    elsif usuario_request.nil?
+      raise Auth::InvalidJwt, "invalid JWT token"
+    elsif jwt_antigo?
+      raise Auth::ExpiredJwt, "expired JWT timestamp"
+    elsif escrita and not escrita_permitida?
+      raise Auth::WritePermissionRequired, "write privilege required"
+    elsif admin and not permissao_admin?
+      raise Auth::AdminPermissionRequired, "admin privileges required"
+    end
   end
 
   def escrita_permitida?
