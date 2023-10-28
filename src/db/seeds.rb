@@ -19,6 +19,17 @@ module SeedsHelper
   end
 end
 
+if Rake::Task.task_defined?('db:seed:paises')
+  puts(
+    "\n",
+    SeedsHelper::banner("carregando países do dataset no banco de dados"),
+    "\n",
+    SeedsHelper::banner_tarefa('db:seed:paises'),
+    "\n"
+  )
+  Rake.application['db:seed:paises'].invoke
+end
+
 if Rake::Task.task_defined?('db:seed:usuarios')
   puts(
     "\n",
