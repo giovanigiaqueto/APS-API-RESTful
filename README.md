@@ -27,16 +27,16 @@ das dependências definidas no arquivo [Gemfile](./src/Gemfile) de forma local:
 - Linux
   ```bash
   fulano:~/APS> cd src
-  fulano:~/APS/src> bin/bundle config set path vendor/bundle
+  fulano:~/APS/src> bin/bundle config set path "vendor/bundle"
   ```
 
 - Windows
   ```powershell
   C:\Users\Fulano\APS> chdir src
-  C:\Users\Fulano\APS\src> ruby bin\bundle config set path vendor/bundle
+  C:\Users\Fulano\APS\src> ruby bin\bundle config set path "vendor\bundle"
   ```
 
-Com isso, é possível instalar as gems na pasta `src/vendor/bundle`:
+Com isso, é possível instalar as gems na pasta "src/vendor/bundle" (gerada dinamicamente):
 
 - Linux
   ```bash
