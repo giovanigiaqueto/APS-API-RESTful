@@ -5,4 +5,12 @@ Rails.application.routes.draw do
   # root "articles#index"
 
   resources :countries, param: :name, except: [:edit]
+
+  resources :users, param: :name, except: [:edit]
+
+  resource :user_by_id,
+    path: 'users/by-id/:id',
+    param: :id,
+    controller: 'user_by_id',
+    only: [:show, :update, :destroy]
 end

@@ -14,6 +14,26 @@ class ActiveSupport::TestCase
     method(:url_for).super_method.call(host: host, port: port, **opt)
   end
 
+  def users_index_url(**opt)
+    url_for(controller: :users, action: 'index', **opt)
+  end
+
+  def users_show_url(**opt)
+    url_for(controller: :users, action: 'show', only_path: true, **opt)
+  end
+
+  def users_create_url(**opt)
+    url_for(controller: :users, action: 'create', **opt)
+  end
+
+  def users_update_url(**opt)
+    url_for(controller: :users, action: 'update', **opt)
+  end
+
+  def users_destroy_url(**opt)
+    url_for(controller: :users, action: 'destroy', only_path: true, **opt)
+  end
+
   def countries_index_url(**opt)
     url_for(controller: :countries, action: 'index', **opt)
   end
