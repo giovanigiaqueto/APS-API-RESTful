@@ -101,6 +101,27 @@ class UsersController < ApplicationController
     end
   end
 
+  def rename
+    # renomeia um usuário
+    autorizar_request! escrita: true, admin: true
+    params.require([:name, :value])
+    User.transaction do
+      @user = User.find_by!(name: params[:name])
+      @user.name = params[:value]
+      if @user.save
+        resposta_request("Resource Renamed")
+      elsif User.exists?(name: params[:value])
+        erro_request("Conflict", "resource already exists", :conflict)
+      elsif User.invalid?
+        request_invalida("invalid parameters")
+      else
+        # algo impediu a renomeação que não seja colisão com um
+        # outro usuário já cadastrado ou nome inválido
+        internal_server_error
+      end
+    end
+  end
+
   def processar_permissao(permissao)
     self.class.processar_permissao(permissao)
   end

@@ -316,4 +316,54 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_not_nil(User.find_by(name: usuario.name))
     assert_not_nil(User.find_by(id: usuario.id))
   end
+
+  test "should rename" do
+    novo_nome = "Novo Nome de Usuário"
+    usuario   = users(:one)
+    post users_rename_url(name: usuario.name),
+      params:  { value: novo_nome },
+      headers: { Authorization: "Bearer #{jwt_admin}" }
+    assert_response :ok
+    assert_nil(User.find_by(name: usuario.name))
+    assert_not_nil(User.find_by(name: novo_nome))
+  end
+
+  test "should not rename (unauthorized)" do
+    novo_nome = "Novo Nome de Usuário"
+    usuario   = users(:two)
+    post users_rename_url(name: usuario.name),
+      params: { value: novo_nome }
+    assert_response :unauthorized
+    assert_not_nil(User.find_by(name: usuario.name))
+  end
+
+  test "should not rename (forbidden)" do
+    novo_nome = "Novo Nome de Usuário"
+    usuario   = users(:one)
+    post users_rename_url(name: usuario.name),
+      params:  { value: novo_nome },
+      headers: { Authorization: "Bearer #{jwt_escrita}" }
+    assert_response :forbidden
+    assert_not_nil(User.find_by(name: usuario.name))
+  end
+
+  test "should not rename (conflict)" do
+    usuario_1 = users(:one)
+    usuario_2 = users(:two)
+    post users_rename_url(name: usuario_1.name),
+      params:  { value: usuario_2.name },
+      headers: { authorization: "Bearer #{jwt_admin}" }
+    assert_response :conflict
+    assert_not_nil(User.find_by(name: usuario_1.name))
+  end
+
+  test "should not rename (not found)" do
+    nome_antigo = "Usuário Inexistente (antigo)"
+    nome_novo   = "Usuário Inexistente (novo)"
+    post users_rename_url(name: nome_antigo),
+      params:  { value: nome_novo },
+      headers: { Authorization: "Bearer #{jwt_admin}" }
+    assert_response :not_found
+    assert_nil(User.find_by(name: nome_antigo))
+  end
 end

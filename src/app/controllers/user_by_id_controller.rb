@@ -25,7 +25,7 @@ class UserByIdController < ApplicationController
     @user = User.find_by!(id: params[:id])
     if request.put?
       # método PUT
-      params.require([:write, :admin])
+      params.require([:name, :write, :admin])
 
       escrita = processar_bool(params[:write])
       admin   = processar_bool(params[:admin])
@@ -34,12 +34,16 @@ class UserByIdController < ApplicationController
         return request_invalida("invalid parameters")
       end
 
+      @user.name        = params[:name]
       @user.allow_write = escrita
       @user.admin       = admin
     else
       # método PATCH
+      nome    = params[:name]
       escrita = params[:write]
       admin   = params[:admin]
+
+      @user.name = nome if nome.present?
 
       # NOTE: interpreta '0' como 'false' e números maiores
       #       que zero em forma de texto como 'true'

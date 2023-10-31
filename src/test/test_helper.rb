@@ -34,6 +34,10 @@ class ActiveSupport::TestCase
     url_for(controller: :users, action: 'destroy', only_path: true, **opt)
   end
 
+  def users_rename_url(**opt)
+    url_for(controller: :users, action: 'rename', only_path: true, **opt)
+  end
+
   def countries_index_url(**opt)
     url_for(controller: :countries, action: 'index', **opt)
   end
@@ -52,6 +56,10 @@ class ActiveSupport::TestCase
 
   def countries_destroy_url(**opt)
     url_for(controller: :countries, action: 'destroy', path_only: true, **opt)
+  end
+
+  def countries_rename_url(**opt)
+    url_for(controller: :countries, action: 'rename', path_only: true, **opt)
   end
 
   def host

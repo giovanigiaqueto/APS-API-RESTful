@@ -13,4 +13,7 @@ Rails.application.routes.draw do
     param: :id,
     controller: 'user_by_id',
     only: [:show, :update, :destroy]
+
+  post 'rename/countries/:name', to: 'countries#rename'
+  post 'rename/users/:name',     to: 'users#rename'
 end

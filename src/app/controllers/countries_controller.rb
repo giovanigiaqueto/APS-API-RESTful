@@ -124,6 +124,26 @@ class CountriesController < ApplicationController
     end
   end
 
+  def rename
+    autorizar_request! escrita: true
+    params.require([:name, :value])
+    Country.transaction do
+      @country = Country.find_by!(name: params[:name])
+      @country.name = params[:value]
+      if @country.save
+        resposta_request("Resource Renamed")
+      elsif Country.exists?(name: params[:value])
+        erro_request("Conflict", "resource already exists", :conflict)
+      elsif @country.invalid?
+        request_invalida("invalid parameters")
+      else
+        # algo impediu a renomeação que não seja colisão com um
+        # outro país já cadastrado ou nome inválido
+        internal_server_error
+      end
+    end
+  end
+
   def processar_indice_corrupcao(valor)
     # converte o índice de corrupção em um número se possível,
     # retornando 'nil' caso a conversão falhe

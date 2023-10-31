@@ -369,4 +369,54 @@ class CountriesControllerTest < ActionDispatch::IntegrationTest
       headers: cabecalho(escrita: true)
     assert_response :not_found
   end
+
+  test "should rename" do
+    novo_nome = "Novo Nome de País"
+    pais      = countries(:one)
+    post countries_rename_url(name: pais.name),
+      params: { value: novo_nome },
+      headers: cabecalho(escrita: true)
+    assert_response :ok
+    assert_nil(Country.find_by(name: pais.name))
+    assert_not_nil(Country.find_by(name: novo_nome))
+  end
+
+  test "should not rename (unauthorized 1/2)" do
+    novo_nome = "Novo Nome de País"
+    pais      = countries(:two)
+    post countries_rename_url(name: pais.name),
+      params: { value: novo_nome }
+    assert_response :unauthorized
+    assert_not_nil(Country.find_by(name: pais.name))
+  end
+
+  test "should not rename (unauthorized 2/2)" do
+    novo_nome = "Novo Nome de País"
+    pais      = countries(:one)
+    post countries_rename_url(name: pais.name),
+      params: { value: novo_nome },
+      headers: cabecalho(escrita: false)
+    assert_response :forbidden
+    assert_not_nil(Country.find_by(name: pais.name))
+  end
+
+  test "should not rename (conflict)" do
+    pais_1 = countries(:one)
+    pais_2 = countries(:two)
+    post countries_rename_url(name: pais_1.name),
+      params: { value: pais_2.name },
+      headers: cabecalho(escrita: true)
+    assert_response :conflict
+    assert_not_nil(Country.find_by(name: pais_1.name))
+  end
+
+  test "should not rename (not found)" do
+    nome_antigo = "País Inexistente (antigo)"
+    nome_novo   = "País Inexistente (novo)"
+    post countries_rename_url(name: nome_antigo),
+      params: { value: nome_novo },
+      headers: cabecalho(escrita: true)
+    assert_response :not_found
+    assert_nil(Country.find_by(name: nome_antigo))
+  end
 end
