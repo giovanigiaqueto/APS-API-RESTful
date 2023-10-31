@@ -38,6 +38,18 @@ class ActiveSupport::TestCase
     url_for(controller: :users, action: 'rename', only_path: true, **opt)
   end
 
+  def user_by_id_show_url(**opt)
+    url_for(controller: :user_by_id, action: 'show', only_path: true, **opt)
+  end
+
+  def user_by_id_update_url(**opt)
+    url_for(controller: :user_by_id, action: 'update', only_path: true, **opt)
+  end
+
+  def user_by_id_destroy_url(**opt)
+    url_for(controller: :user_by_id, action: 'destroy', only_path: true, **opt)
+  end
+
   def countries_index_url(**opt)
     url_for(controller: :countries, action: 'index', **opt)
   end
@@ -60,6 +72,25 @@ class ActiveSupport::TestCase
 
   def countries_rename_url(**opt)
     url_for(controller: :countries, action: 'rename', path_only: true, **opt)
+  end
+
+  def gerar_id_disponivel(cls, sym = :id)
+    if not cls.is_a?(Class) and cls < ActiveModel::Base
+      raise ArgumentError, "expected 'cls' to be a subclass of ActiveMode::Base"
+    elsif not sym.is_a?(Symbol)
+      raise ArgumentError, "expected 'sym' to be a Symbol for use as ID field name"
+    end
+
+    id = (1000 * Random.rand()).to_i
+    for _ in 0..1000 do
+      if cls.exists?(sym => id)
+        id += 1
+      else
+        break
+      end
+    end
+    flunk("unable to generate unused ID") if cls.exists?(sym => id)
+    id
   end
 
   def host
