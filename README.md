@@ -85,6 +85,26 @@ sejam usadas:
   C:\Users\Fulano\APS\src> ruby bin\bundle exec bin\rails server
   ```
 
+## Testagem de todos os métodos REST implementados
+
+Os métodos REST da API podem ser testados de forma extensiva e automática
+pelo próprio rails, que irá executar todos os testes definidos na pasta [src/test](./src/test),
+ou somente alguns testes caso seja especificado na linha de comando.
+
+Os métodos podem ser testados completamente com os seguintes comandos:
+
+- Linux
+  ```bash
+  fulano:~/APS/src> bin/bundle exec bin/rails test
+  ```
+
+- Windows
+  ```powershell
+  C:\Users\Fulano\APS\src> ruby bin\bundle exec bin\rails test
+  ```
+
+###### Observação: a testagem usam o banco de dados de teste por padrão, que é carregado com os dados da pasta [src/test/fixtures](./src/test/fixtures), então não há risco de corromper o banco de dados principal.
+
 ## Executando o Servidor como Serviço Docker
 
 Caso `docker` e `docker-compose` estejam instalados, o servidor também pode ser executado
