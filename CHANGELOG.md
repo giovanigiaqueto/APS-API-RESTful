@@ -1,6 +1,66 @@
 
 # Changelog
 
+## [Versão v1.0.0](https://github.com/giovanigiaqueto/APS-API-RESTful/releases/tag/v1.0.0)
+
+[Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.2.2...v1.0.0)
+
+**Mudanças Principais:**
+
+* Métodos REST
+    * Suporte completo para listagem, busca, criação, alteração e remoção dos cadastros de países e usuários,
+        com necessidade de permissão de escrita para alterar cadastros e permissão de administrador para
+        acessar ou alterar cadastros de usuários
+    * Suporte para busca, alteração e remoção de usuários por ID,
+        dado que o usuário da requisição tenha permissão de administrador
+    * Renomeação de países
+    * Renomeação de usuários por ID ou nome
+    * Suporte para o usuário de uma requisição ler informações sobre
+        seu cadastro e token JWT usado sem necessitar de autenticação
+        (campos vazios são retornados caso a autenticação falhe)
+* Testagem extensiva de todos os métodos REST,
+    que pode ser feita com `bin/bundle exec bin/rails test`
+* Requisições não autenticadas ou autorizadas
+    * Definição de tipos de erro relacionados à autorização e autenticação
+    * Separação entre autenticação e autorização, gerando erros de autorização
+        quando uma requisição é autenticada corretamente, mas o usuário da requisição
+        não pode acessar ou alterar um recurso por falta de permissões de acesso,
+        e erros de autenticação quando a autenticação não pode ser concluída
+* Recuperação automática de alguns tipos de erros nos controladores,
+    convertendo alguns tipos de exceção em respostas HTTP pré-definidas
+    * Resposta HTTP "Bad Request (400)" quando uma requisição não tem um parâmetro obrigatório
+    * Resposta HTTP "Unauthorized (401)" em erros de autenticação não tratados
+    * Resposta HTTP "Forbidden (403)" em erros de autorização não tratados
+    * Resposta HTTP "Not Found (404)" quando um recurso não pode ser encontrado
+* Carregamento do Dataset
+    * Carregamento facilitado do dataset pela task Rake 'db:seed'
+    * Adição de biblioteca de suporte para carregamento do dataset,
+        simplificando a implementação da tarefa de carregamento
+    * Remoção do script antigo de carregamento do dataset
+
+**Lista de Mudanças:**
+
+* rails/api: leitura de informações do usuário que fez a requisição [7c14c59](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/7c14c59)
+* testagem: testagem completa dos métodos de manipulação de usuários por ID [b5ab59f](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/b5ab59f)
+* rails/api: suporte à renomeação do países e usuários [c338415](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/c338415)
+* rails/api: implementação dos métodos de manipulação de cadastro de usuários [37f064c](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/37f064c)
+* testagem: testagem completa dos métodos de manipulação de países [e28a49f](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/e28a49f)
+* rails/api: criação, remoção e atualização de registros de países na API [f46df00](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/f46df00)
+* rails/routing: remodelação do roteamento da API de manipulação de países [a9a57fb](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/a9a57fb)
+* auth/http: diferenciação entre os códigos de status Unauthorized e Forbidden [4fcb72e](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/4fcb72e)
+* rails/app: recuperação de erro padronizada em partes dos controladores [060313d](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/060313d)
+* auth/http: melhoria dos métodos de resposta à requisições [d40d4fe](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/d40d4fe)
+* auth: melhoria do método de autorização de requisições [20b9370](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/20b9370)
+* auth/http: adição de tipos de exceção para requisições não autorizadas [29051ab](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/29051ab)
+* auth/jwt, auth/http: separação de ApplicationController em Auth::Http e Auth::Jwt [44a65c1](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/44a65c1)
+* readme: correções no README.md [4a4f1c4](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/4a4f1c4)
+* readme: update do README.md com novas instruções de configuração [87256fb](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/87256fb)
+* dataset/script: remoção do script antigo de carregamento do dataset [9b28d79](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/9b28d79)
+* dataset/rake: carregamento do dataset via task Rake [5c15211](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/5c15211)
+* dataset: novo módulo para facilitar o carregamento do dataset no banco [6a8165c](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/6a8165c)
+* rails/rake: carregamento de valores no banco através da tarefa 'db:seeds' [431894f](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/431894f)
+* rails/rake: tarefa Rake para carregamento de usuários pré-definidos no banco [e37b591](https://github.com/giovanigiaqueto/APS-API-RESTful/commit/e37b591)
+
 ## [Hotfix v0.2.2](https://github.com/giovanigiaqueto/APS-API-RESTful/releases/tag/v0.2.2)
 
 [Changelog Completo](https://github.com/giovanigiaqueto/APS-API-RESTful/compare/v0.2.1...v0.2.2)
