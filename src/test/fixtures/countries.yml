@@ -1,11 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  name: MyString
-  corruption_index: 1
-  annual_income: 9.99
+  name: 'País Um'
+  corruption_index: 67
+  annual_income: 1000.0
 
 two:
-  name: MyString
-  corruption_index: 1
-  annual_income: 9.99
+  name: 'País Dois'
+  corruption_index: 50
+  annual_income: 890.20
