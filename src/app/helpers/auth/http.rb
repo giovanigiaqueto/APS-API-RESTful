@@ -52,6 +52,12 @@ module Auth::Http
     erro_request("Unauthorized", motivo, :unauthorized)
   end
 
+  def request_nao_permitida(motivo)
+    # resposta relacionada a uma request autorizada por um token JWT,
+    # mas que não tem privilégios suficientes para acessar um recurso
+    erro_request("Forbidden", motivo, :forbidden)
+  end
+
   def internal_server_error(motivo = nil)
     # resposta relacionada a um erro interno do servidor ao processar a request
     motivo = "unknown cause" if motivo.blank?
