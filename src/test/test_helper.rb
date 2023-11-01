@@ -50,6 +50,10 @@ class ActiveSupport::TestCase
     url_for(controller: :user_by_id, action: 'destroy', only_path: true, **opt)
   end
 
+  def profiles_show_url(**opt)
+    url_for(controller: :profiles, action: 'show')
+  end
+
   def countries_index_url(**opt)
     url_for(controller: :countries, action: 'index', **opt)
   end

@@ -16,4 +16,6 @@ Rails.application.routes.draw do
 
   post 'rename/countries/:name', to: 'countries#rename'
   post 'rename/users/:name',     to: 'users#rename'
+
+  get 'profile', to: 'profiles#show'
 end
